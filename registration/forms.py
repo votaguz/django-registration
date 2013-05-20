@@ -9,7 +9,10 @@ you're using a custom model.
 """
 
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.conf import settings 
+User = settings.AUTH_USER_MODEL
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
