@@ -6,7 +6,8 @@ import re
 from django.conf import settings
 # from django.contrib.auth.models import User
 from django.conf import settings 
-User = settings.AUTH_USER_MODELfrom django.db import models
+User = settings.AUTH_USER_MODEL
+from django.db import models
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
