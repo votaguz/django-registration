@@ -2,12 +2,11 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 # from django.contrib.auth.models import User
-from django.conf import settings 
-User = settings.AUTH_USER_MODEL
-
 from registration import signals
 from registration.views import RegistrationView as BaseRegistrationView
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class RegistrationView(BaseRegistrationView):
     """
