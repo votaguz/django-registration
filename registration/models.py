@@ -12,6 +12,7 @@ from django.db import models
 from django.db import transaction
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
+from templated_email import send_templated_mail
 
 try:
     from django.utils.timezone import now as datetime_now
@@ -256,13 +257,24 @@ class RegistrationProfile(models.Model):
         ctx_dict = {'activation_key': self.activation_key,
                     'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS,
                     'site': site}
-        subject = render_to_string('registration/activation_email_subject.txt',
-                                   ctx_dict)
-        # Email subject *must not* contain newlines
-        subject = ''.join(subject.splitlines())
+
+        try:
+            send_templated_mail(
+                template_name='activation_email',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[self.user.email],
+                context=ctx_dict,
+            )    
+        except Exception, e:
+            raise e
+
+        # We going to use django_templated_email in this part.
+        # subject = render_to_string('registration/activation_email_subject.txt',
+        #                            ctx_dict)
+        # subject = ''.join(subject.splitlines())
         
-        message = render_to_string('registration/activation_email.txt',
-                                   ctx_dict)
+        # message = render_to_string('registration/activation_email.txt',
+        #                            ctx_dict)
         
-        self.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
-    
+        # self.user.email_user(subject, message, settings.DEFAULT_FROM_EMAIL)
+        
